@@ -1,0 +1,95 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: #FFCC33; /* Fondo amarillo Pokémon */
+  color: #333;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Título */
+h1 {
+  font-size: 3rem;
+  margin-bottom: 30px;
+  color: #fff;
+  text-shadow: 2px 2px #333;
+}
+
+/* Lista de pokemones */
+#lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Tarjetas de Pokémon */
+.pokemon {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease-in-out;
+  position: relative;
+}
+
+.pokemon:hover {
+  transform: scale(1.05);
+}
+
+.pokemon strong {
+  display: block;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+/* Botones */
+button {
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 5px;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #0b79d0;
+}
+
+/* Formulario de crear Pokémon */
+form {
+  margin: 30px auto;
+  max-width: 400px;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+form input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+form button {
+  width: 100%;
+  margin-top: 10px;
+  background: #ff5722;
+}
+
+form button:hover {
+  background: #e64a19;
+}

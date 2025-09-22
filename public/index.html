@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pokémon API</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Pokémon API 🐉</h1>
+
+  <h2>Lista de Pokémons</h2>
+  <div id="lista"></div>
+
+  <h2>añadir Pokémon</h2>
+  <form id="crearForm">
+    <input type="text" id="nombre" placeholder="Nombre (ej: pikachu)" required>
+    <input type="text" id="tipo" placeholder="Tipo" required>
+    <input type="number" id="nivel" placeholder="Nivel" required>
+    <button type="submit">añadir</button>
+  </form>
+
+  <script>
+    const API = "http://localhost:3000/pokemons";
+
+    async function cargarPokemons() {
+      const res = await fetch(API);
+      const data = await res.json();
+      const lista = document.getElementById("lista");
+      lista.innerHTML = "";
+
+      const pokemons = data.results || data;
+
+      pokemons.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "pokemon";
+        div.innerHTML = `
+          <img src="${p.imagen}" alt="${p.nombre}" style="width:120px; height:120px;"><br>
+          <strong>${p.nombre}</strong> (${p.tipo}) - Nivel ${p.nivel} 
+          <br>
+          <button onclick="borrarPokemon('${p.id}')">❌ Borrar</button>
+          <button onclick="actualizarPokemon('${p.id}')">✏️ Actualizar</button>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    async function borrarPokemon(id) {
+      await fetch(`${API}/${id}`, { method: "DELETE" });
+      cargarPokemons();
+    }
+
+    async function actualizarPokemon(id) {
+      const nuevoNombre = prompt("Nuevo nombre:");
+      const nuevoNivel = prompt("Nuevo nivel:");
+      if (!nuevoNombre && !nuevoNivel) return;
+
+      await fetch(`${API}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre: nuevoNombre, nivel: nuevoNivel })
+      });
+      cargarPokemons();
+    }
+
+    document.getElementById("crearForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value.toLowerCase();
+      const tipo = document.getElementById("tipo").value;
+      const nivel = document.getElementById("nivel").value;
+
+      // Buscar datos en PokéAPI
+      const pokeRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${nombre}`);
+      if (!pokeRes.ok) {
+        alert("Pokémon no encontrado en la PokéAPI");
+        return;
+      }
+      const pokeData = await pokeRes.json();
+
+      // Obtengo el id oficial de PokéAPI
+      const pokeapi_id = pokeData.id;
+
+      // Enviar al backend con pokeapi_id
+      await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, tipo, nivel, pokeapi_id })
+      });
+
+      e.target.reset();
+      cargarPokemons();
+    });
+
+    cargarPokemons();
+  </script>
+</body>
+</html>
